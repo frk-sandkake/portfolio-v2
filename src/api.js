@@ -1,3 +1,9 @@
+import axios from 'axios';
+
+export const client = axios.create({
+    baseURL: 'https://api.github.com/users/frk-sandkake'
+})
+
 export async function getRepos() {
     const response = await fetch('https://api.github.com/users/frk-sandkake')
     const data = await response.json()

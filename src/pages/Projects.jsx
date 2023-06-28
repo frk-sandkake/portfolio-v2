@@ -2,38 +2,22 @@ import React, { useState } from 'react'
 import {RepoCard} from "../components/Card"
 import Box from "@mui/material/Box"
 import Grid from "@mui/material/Grid"
+import { Item } from '../pages/Home'
 import { useParams, Link } from 'react-router-dom'
 import { client } from '../api'
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 const Projects = () => {
     const [repos, setRepos] = useState([])
-    const [expanded, setExpanded] = React.useState(false);
 
     React.useEffect(() => {
         const fetchRepos = async () => {
@@ -43,29 +27,29 @@ const Projects = () => {
         fetchRepos()
     }, [])
 
-      const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
     const latestUpdates =
         repos.map((repo) => {
             return (
-                <div key={repo.id} >
-                    <h3>{repo.name}</h3>
-                        <Card sx={{ maxWidth: 345 }} >
-                            <CardHeader
+                <Grid item xs={10} md={6} container justifyContent='center' alignItems='stretch'>
+                    <Item sx={{ width: '100%' }} container direction='row' alignItems='center'>
+                        <Card sx={{ maxWidth: 440, height: '100%' }} key={repo.id} >
+                            <CardHeader sx={{ textAlign: 'left'}}
                                 avatar={
-                                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                    <img src="{repo.owner.avatar_url}" alt="" />
+                                <Avatar aria-label="Github profile image">
+                                    <img src={repo.owner.avatar_url}  alt="" height='48px' style={{ objectFit: "cover", marginLeft: '8px'}}/>
                                 </Avatar>
                                 }
                                 title={repo.full_name}
                                 subheader={repo.updated_at}
                             />
                             <CardContent>
-                                <Typography variant="body2" color='text.secondary'>
+                            <Typography component='h3' variant="h6" color='primary.main' textAlign='center' pb={1} >
+                                    {repo.name}
+                            </Typography>
+                            <Typography variant="body2" color='text.secondary' textAlign='center' pb={1}>
                                     {repo.description}
                             </Typography>
-                            <Button component={Link} to={repo.html_url}>
+                            <Button component={Link} to={repo.html_url} >
                                 To repo on GitHub
                             </Button>
                             </CardContent>
@@ -76,37 +60,27 @@ const Projects = () => {
                                 <IconButton aria-label="share">
                                 <ShareIcon />
                                 </IconButton>
-                                <ExpandMore
-                                expand={expanded}
-                                onClick={handleExpandClick}
-                                aria-expanded={expanded}
-                                aria-label="show more"
-                                >
-                                <ExpandMoreIcon />
-                                </ExpandMore>
                             </CardActions>
-                            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                                <CardContent>
-                                <Typography paragraph></Typography>
-                                <Typography paragraph>
-                                </Typography>
-                                </CardContent>
-                            </Collapse>
-                            </Card>
-                </div>
+                        </Card>
+                    </Item>
+                </Grid>
+
             )
         })
 
     return (
         <Box>
-            <Grid container>
-                <h1>Project Page</h1>
-                <div>
-                    <h2>Latest Updated repos</h2>
-                   {latestUpdates}
-                </div>
-
-            </Grid>
+            <Typography component='h1' variant="h3" color='primary.main'>
+                    Project Page
+            </Typography>
+            <Box p={1} >
+                <Typography component='h2' variant="h4" p={1} color='secondary.light'>
+                    Latest Updated repos
+                </Typography>
+                <Grid container justifyContent='center' spacing={1} >
+                    {latestUpdates}
+                </Grid>
+            </Box>
         </Box>
     )
 }
